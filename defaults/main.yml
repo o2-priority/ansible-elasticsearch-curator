@@ -1,6 +1,8 @@
 ---
 
 elasticsearch_curator_version: 5.4.1
+elasticsearch_curator_version_string:   "{{ elasticsearch_curator_version|string }}"
+elasticsearch_curator_major_version:    "{{ elasticsearch_curator_version_string.split('.')|first }}"
 
 elasticsearch_curator_conf_dir: /etc/elasticsearch-curator
 
@@ -26,6 +28,9 @@ elasticsearch_curator_logging_blacklist: ['elasticsearch', 'urllib3']
 
 elasticsearch_curator_actions:  []
 elasticsearch_curator_cron_job: {}
+
+elasticsearch_curator_signing_key_url:  "https://packages.elastic.co/GPG-KEY-elasticsearch"
+elasticsearch_curator_apt_repo:         "deb [arch=amd64] https://packages.elastic.co/curator/{{elasticsearch_curator_major_version}}/debian stable main"
 
 ##elasticsearch_curator_actions:
 ##  - action: delete_indices

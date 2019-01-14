@@ -1,6 +1,5 @@
 ---
 
-# Install python-pip
 - name: Install python-pip | Debian
   apt: name=python-pip state=present
   when: ansible_os_family|lower == 'debian'
@@ -9,11 +8,25 @@
   yum: name=python-pip state=present
   when: ansible_os_family|lower == 'redhat'
 
-# Install elasticsearch-curator python package
-- name: Install elasticsearch-curator
-  pip: 
+- name: Remove elasticsearch-curator pip installation
+  pip:
     name: elasticsearch-curator
-    version: "{{ elasticsearch_curator_version }}"
+    state: absent
+
+- name: Download and install elasticsearch-curator gpg public signing key
+  apt_key:
+    url:   "{{ elasticsearch_curator_signing_key_url }}"
+    state: present
+
+- name: Add elasticsearch apt repository definition to apt sources list
+  apt_repository:
+    repo:         "{{ elasticsearch_curator_apt_repo }}"
+    update_cache: yes
+    state:        present
+
+- name: Install elasticsearch-curator
+  apt:
+    name: "elasticsearch-curator={{ elasticsearch_curator_version }}"
     state: present
 
 # Configuration files
